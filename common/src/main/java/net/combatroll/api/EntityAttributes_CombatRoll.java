@@ -23,15 +23,22 @@ public class EntityAttributes_CombatRoll {
     public static final Identifier countId = new Identifier(CombatRoll.MOD_ID + ":" + countName);
     public static final EntityAttribute COUNT = (new ClampedEntityAttribute("attribute.name.combat_roll." + countName, 1, 0, 20.0)).setTracked(true);
 
+    public static final String airRollName = "air_roll";
+    public static final Identifier airRollId = new Identifier(CombatRoll.MOD_ID + ":" + airRollName);
+    public static final EntityAttribute AIR_ROLL = (new ClampedEntityAttribute(
+            "attribute.name.combat_roll." + airRollName,
+            (CombatRoll.config != null && CombatRoll.config.allow_rolling_while_airborn_default) ? 1.0 : 0.0,
+            0, 1.0)).setTracked(true);
+
     public static List<EntityAttribute> all;
     static {
-        all = List.of(DISTANCE, RECHARGE, COUNT);
+        all = List.of(DISTANCE, RECHARGE, COUNT, AIR_ROLL);
     }
 
     // Helper
 
     public enum Type {
-        DISTANCE, RECHARGE, COUNT
+        DISTANCE, RECHARGE, COUNT, AIR_ROLL
     }
 
     public static double getAttributeValue(PlayerEntity player, Type type) {
@@ -53,6 +60,9 @@ public class EntityAttributes_CombatRoll {
                 var level = EnchantmentHelper.getEquipmentLevel(Enchantments_CombatRoll.COUNT, player);
                 value = Enchantments_CombatRoll.COUNT.apply(value, level);
                 return value;
+            }
+            case AIR_ROLL -> {
+                return player.getAttributeValue(AIR_ROLL);
             }
         }
         return 1; // Should never happen

@@ -40,6 +40,7 @@ public class CombatRoll {
         Registry.register(Registries.ATTRIBUTE, EntityAttributes_CombatRoll.distanceId, EntityAttributes_CombatRoll.DISTANCE);
         Registry.register(Registries.ATTRIBUTE, EntityAttributes_CombatRoll.rechargeId, EntityAttributes_CombatRoll.RECHARGE);
         Registry.register(Registries.ATTRIBUTE, EntityAttributes_CombatRoll.countId, EntityAttributes_CombatRoll.COUNT);
+        Registry.register(Registries.ATTRIBUTE, EntityAttributes_CombatRoll.airRollId, EntityAttributes_CombatRoll.AIR_ROLL);
     }
 
     public static void configureEnchantments() {

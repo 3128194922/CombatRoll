@@ -5,6 +5,7 @@ import net.combatroll.api.EntityAttributes_CombatRoll;
 import net.combatroll.client.RollEffect;
 import net.combatroll.client.Keybindings;
 import net.combatroll.compatibility.BetterCombatHelper;
+import net.combatroll.compatibility.ShiledAttackHelper;
 import net.combatroll.internals.RollingEntity;
 import net.combatroll.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -22,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.combatroll.api.EntityAttributes_CombatRoll.Type.AIR_ROLL;
 import static net.combatroll.api.EntityAttributes_CombatRoll.Type.DISTANCE;
 import static net.combatroll.client.RollEffect.Particles.PUFF;
 
@@ -79,7 +81,8 @@ public abstract class MinecraftClientMixin {
             if(!rollManager.isRollAvailable(player)) {
                 return;
             }
-            if(!CombatRoll.config.allow_rolling_while_airborn && !player.isOnGround()) {
+            // Air roll is enabled when the air roll attribute is at its maximum value (1).
+            if (EntityAttributes_CombatRoll.getAttributeValue(player, AIR_ROLL) < 1.0 && !player.isOnGround()) {
                 return;
             }
             if(player.getHungerManager().getFoodLevel() <= CombatRoll.config.food_level_required) {
@@ -91,13 +94,26 @@ public abstract class MinecraftClientMixin {
             if(player.getVehicle() != null) {
                 return;
             }
-            if(player.isUsingItem() || player.isBlocking()) {
+            if (CombatRoll.config.cancel_current_action_on_roll) {
+                // Cancel the current action and roll anyway.
+                if (player.isUsingItem()) {
+                    player.stopUsingItem();
+                }
+                if (itemUseCooldown > 0) {
+                    itemUseCooldown = 0;
+                }
+            } else if (player.isUsingItem() || player.isBlocking()) {
                 return;
             }
-            if (!CombatRoll.config.allow_rolling_while_weapon_cooldown && player.getAttackCooldownProgress(0) < 0.95) {
+            // shiledattack hold-to-attack keeps the attack key held; detect it
+            // so the weapon-cooldown and attack-key guards below can let the roll through.
+            var shiledAutoAttack = ShiledAttackHelper.isAutoAttackHeld(client);
+            if (!shiledAutoAttack && !CombatRoll.config.allow_rolling_while_weapon_cooldown && player.getAttackCooldownProgress(0) < 0.95) {
                 return;
             }
-            if (BetterCombatHelper.isDoingUpswing()) {
+            if (shiledAutoAttack) {
+                // Auto attack via shiledattack: allow the roll even though the attack key is held.
+            } else if (BetterCombatHelper.isDoingUpswing()) {
                 BetterCombatHelper.cancelUpswing();
             } else {
                 if (client.options.attackKey.isPressed()) {

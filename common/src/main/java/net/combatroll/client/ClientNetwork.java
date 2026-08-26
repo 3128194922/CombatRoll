@@ -1,6 +1,7 @@
 package net.combatroll.client;
 
 import net.combatroll.CombatRoll;
+import net.combatroll.api.EntityAttributes_CombatRoll;
 import net.combatroll.internals.RollingEntity;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,6 +26,13 @@ public class ClientNetwork {
                 rollingPlayer.getRollManager().isEnabled = true;
             }
             CombatRoll.config = config;
+            // Reflect the server's air roll default onto the local player's air roll attribute.
+            if (client.player != null) {
+                var airRoll = client.player.getAttributeInstance(EntityAttributes_CombatRoll.AIR_ROLL);
+                if (airRoll != null) {
+                    airRoll.setBaseValue(config.allow_rolling_while_airborn_default ? 1.0 : 0.0);
+                }
+            }
         });
     }
 }

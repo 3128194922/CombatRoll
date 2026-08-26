@@ -20,6 +20,7 @@
   "attribute.name.combat_roll.distance" : "翻滚距离",
   "attribute.name.combat_roll.count" : "额外翻滚次数",
   "attribute.name.combat_roll.recharge" : "翻滚冷却",
+  "attribute.name.combat_roll.air_roll" : "空中翻滚",
 
   "text.autoconfig.combatroll.title": "战术翻滚",
   "text.autoconfig.combatroll.option.client.playCooldownSound" : "翻滚冷却结束音效",

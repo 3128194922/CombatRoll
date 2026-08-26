@@ -20,6 +20,7 @@
   "attribute.name.combat_roll.distance" : "Roll Distance",
   "attribute.name.combat_roll.count" : "Extra Roll",
   "attribute.name.combat_roll.recharge" : "Roll Recharge",
+  "attribute.name.combat_roll.air_roll" : "Air Roll",
 
   "text.autoconfig.combatroll.title": "Combat Roll",
   "text.autoconfig.combatroll.option.client.playCooldownSound" : "Play cooldown ready sound",

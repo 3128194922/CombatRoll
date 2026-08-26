@@ -36,6 +36,7 @@ public class ForgeMod {
                 helper.register(EntityAttributes_CombatRoll.distanceId, EntityAttributes_CombatRoll.DISTANCE);
                 helper.register(EntityAttributes_CombatRoll.rechargeId, EntityAttributes_CombatRoll.RECHARGE);
                 helper.register(EntityAttributes_CombatRoll.countId, EntityAttributes_CombatRoll.COUNT);
+                helper.register(EntityAttributes_CombatRoll.airRollId, EntityAttributes_CombatRoll.AIR_ROLL);
             }
         );
         event.register(ForgeRegistries.Keys.ENCHANTMENTS,
