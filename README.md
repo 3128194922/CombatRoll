@@ -2,104 +2,121 @@
 
 <div align="center">
 
-<a href="">![Java 17](https://img.shields.io/badge/Java%2017-ee9258?logo=coffeescript&logoColor=ffffff&labelColor=606060&style=flat-square)</a>
-<a href="">![Environment: Client & Server](https://img.shields.io/badge/environment-Client%20&%20Server-1976d2?style=flat-square)</a>
-<a href="">[![Discord](https://img.shields.io/discord/973561601519149057.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2&style=flat-square)](https://discord.gg/KN9b3pjFTM)</a>
+![Minecraft 1.20.1](https://img.shields.io/badge/Minecraft-1.20.1-62b47a?style=flat-square)
+![Java 17](https://img.shields.io/badge/Java-17-ee9258?logo=coffeescript&logoColor=ffffff&labelColor=606060&style=flat-square)
+![Environment: Client & Server](https://img.shields.io/badge/environment-Client%20%26%20Server-1976d2?style=flat-square)
+![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square)
 
 </div>
 
-# 🧶️ Features
+# Combat Roll（1.20.1 中文 Fork）
 
-- Adds Combat Roll ability for players, press `R` to roll (by default)
-- Adds entity attributes to improve rolling capabilities
-  - `combatroll:distance` determines how far the player rolls (the default distance is 3 blocks, server configurable)
-    - Example for increasing the rollign range by 3: `/give @s leather_boots{AttributeModifiers:[{AttributeName:"combatroll:distance", Name:"testing", Amount:3.0, Operation:0,Slot:"feet",UUID:[I; 66453, 79497593, -201178, -16957605]}]} 1`
-  - `combatroll:recharge` determines how quickly the cooldown of the roll ability recovers (the default cooldown is 4 seconds, server configurable)
-    - Example for increasing the recharge speed by +50%: `/give @s leather_leggings{AttributeModifiers:[{AttributeName:"combatroll:recharge", Name:"testing", Amount:0.5, Operation:1,Slot:"legs",UUID:[I; 66453, 79497593, -201177, -16957605]}]} 1`
-  - `combatroll:count` determines how many times a player can roll before having to wait for recharging (by default a player has 1 roll)
-    - Example for increasing the number of rolls by 2: `/give @s leather_helmet{AttributeModifiers:[{AttributeName:"combatroll:count", Name:"testing", Amount:2, Operation:0,Slot:"head",UUID:[I; 66453, 79497594, -201177, -16957605]}]} 1`
-  - `combatroll:air_roll` determines whether the player can roll while airborne (in the air). Its value ranges from `0` to `1`; when it is `1`, air rolling is enabled. The default value follows the server config option `allow_rolling_while_airborn_default` (default `false`, i.e. `0`).
-    - Example for enabling air rolling: `/give @s golden_boots{AttributeModifiers:[{AttributeName:"combatroll:air_roll", Name:"testing", Amount:1.0, Operation:0,Slot:"feet",UUID:[I; 66453, 79497593, -201178, -16957605]}]} 1`
-- Adds new enchantments related to the rolling ability
-  - `Longfooted` can be enchanted on boots
-    - Increases the distance of your rolls (by 1 block / level)
-  - `Acrobat's Shirt` & `Acrobat's Pants` can be enchanted on chests and legs respectively 
-    - Increases the recharge speed of the roll cooldown (by +10% / level)
-  - `Multi-Roll` can be enchanted on helmets
-    - Grants extra rolls (+1 roll / level)
-- Adds an indicator (arrow) to the ingame UI (aka HUD) showing the cooldown of the roll ability and number of rolls available
-- Exhaust (aka hunger) is added to the player upon rolling (server side configurable)
-- Roll ability can only be used when player is not swimming / crawling / riding a mount / using an item (unless action cancelling is enabled, see below)
-- By default (`cancel_current_action_on_roll = true`) rolling automatically cancels the player's current action (using an item, blocking, etc.) and rolls anyway; set to `false` to restore the original behavior where rolling is prevented while the player is using an item or blocking
-- High compatibility with [Better Combat](https://github.com/ZsoltMolnarrr/BetterCombat)
-- Automatic compatibility with [Extreme Evasion](https://github.com/I4M4NIAC/ExtremeEvasion): every roll (including air rolls and action-cancelling rolls) notifies Extreme Evasion so its "perfect evade" window opens correctly
+这是 [ZsoltMolnarrr/CombatRoll](https://github.com/ZsoltMolnarrr/CombatRoll) 的独立维护分支，面向 **Minecraft 1.20.1（Fabric / Forge）**，在原版战斗翻滚的基础上加入空中翻滚属性、翻滚时取消当前动作、`shiledattack` 自动攻击兼容和 Extreme Evasion 兼容。
 
-# 🔧 Configuration
+> **分支说明：** 本仓库只保留 `1.20.1` 一个分支，不维护、不合并其他 Minecraft 版本。需要 1.20.1 以外的版本，请前往[上游仓库](https://github.com/ZsoltMolnarrr/CombatRoll)。
 
-### Fabric
+## 本 Fork 与上游的区别
 
-Client side settings can be accessed via the [Mod Menu](https://github.com/TerraformersMC/ModMenu).
+| 项目 | 上游 Combat Roll | 本 Fork |
+| --- | --- | --- |
+| 维护范围 | 同时维护多个 Minecraft 版本分支 | **只维护 `1.20.1`**，其他版本分支已删除 |
+| 文档 | 英文 README | **完整中文 README**，并明确列出本 Fork 的差异 |
+| 空中翻滚 | 服务端布尔开关 `allow_rolling_while_airborn` | 新增玩家属性 **`combatroll:air_roll`**（`0`～`1`）；配置项改为 **`allow_rolling_while_airborn_default`**，用于决定该属性的默认值 |
+| 使用物品 / 格挡时翻滚 | 默认禁止翻滚 | 新增服务端配置 **`cancel_current_action_on_roll`**，默认 `true`：自动停止当前动作并继续翻滚；设为 `false` 可恢复上游行为 |
+| `shiledattack` 自动攻击 | 按住攻击键时会被原版翻滚前置检查拦截 | 安装 `shiledattack` 后，在“按住攻击键自动攻击且未使用物品”的情况下允许翻滚 |
+| Extreme Evasion | 无专门联动 | 安装 Extreme Evasion 后，在翻滚开始时通过反射通知其开启完美闪避窗口；未安装时完全跳过 |
+| 中文属性名 | 无 `combatroll:air_roll` 的中文翻译 | 已补充“空中翻滚”本地化 |
 
-### Forge
+### 兼容性改动的具体行为
 
-Client side settings can be accessed in Main Menu > Mods > Combat Roll > Config.
+- **`shiledattack` 兼容**仅在模组 ID `shiledattack` 已加载时生效。它只放宽“按住攻击键自动攻击”场景下的武器冷却与攻击键检查，不会绕过饥饿、骑乘、游泳或爬行等基础限制；使用物品或格挡时是否翻滚仍由 `cancel_current_action_on_roll` 决定。
+- **Extreme Evasion 兼容**不使用编译期依赖，也不要求双方版本一一对应；通过运行时反射调用 `cc.sighs.extremeevasion.ExtremeEvasionEvents.startExternalRollWindow(Player)`。目标方法不存在或调用失败时只跳过联动，不影响翻滚本身。
+- 本 Fork 的模组 ID 仍是 `combatroll`。**不要在同一整合包中同时安装上游版本和本 Fork**，请二选一。
+- 完整实现可查看提交 [`67c8d8e`](https://github.com/3128194922/CombatRoll/commit/67c8d8e45b92788061a70820a10e72beacbe1f88)。
 
-### Server
+## 主要功能
 
-**Server side** configuration can be found in the `config` directory, after running the game with the mod installed.
+- 按 `R`（默认键位）进行战术翻滚，可通过客户端设置修改键位。
+- HUD 显示剩余翻滚次数与冷却进度。
+- 翻滚会增加消耗度（exhaustion），具体数值由服务端配置。
+- 支持 Fabric 与 Forge；客户端和服务端都需要安装。
+- 保留上游的翻滚距离、冷却恢复、额外翻滚次数和附魔系统。
+- 与 [Better Combat](https://github.com/ZsoltMolnarrr/BetterCombat) 保持兼容。
 
-Notable server options added relative to upstream:
+### 玩家属性
 
-- `allow_rolling_while_airborn_default` (`false`): the default value of the `combatroll:air_roll` attribute. When `true`, players can roll while airborne by default (attribute defaults to `1`).
-- `cancel_current_action_on_roll` (`true`): when `true`, rolling automatically cancels the player's current action (using an item, blocking, etc.) and rolls anyway; when `false`, rolling is prevented while using an item or blocking (original behavior).
+| 属性 | 作用 | 默认值 |
+| --- | --- | --- |
+| `combatroll:distance` | 翻滚距离 | 3 格 |
+| `combatroll:recharge` | 翻滚冷却恢复速度 | 4 秒冷却 |
+| `combatroll:count` | 额外翻滚次数 | 1 次 |
+| `combatroll:air_roll` | 是否允许空中翻滚；`0` 为禁止，`1` 为允许 | 由 `allow_rolling_while_airborn_default` 决定，默认 `0` |
 
-# 🔨 Using it as a modder
+`combatroll:air_roll` 示例（Minecraft 1.20.1 NBT 语法）：
 
-## Installation
-
-Add this mod as dependency into your build.gradle file.
-
-Repository
-```groovy
-repositories {
-    maven {
-        name = 'Modrinth'
-        url = 'https://api.modrinth.com/maven'
-        content {
-            includeGroup 'maven.modrinth'
-        }
-    }
-}
+```mcfunction
+/give @s golden_boots{AttributeModifiers:[{AttributeName:"combatroll:air_roll",Name:"air_roll_test",Amount:1.0,Operation:0,Slot:"feet",UUID:[I; 66453, 79497593, -201178, -16957605]}]} 1
 ```
 
-### Fabric workspace
-```groovy
-dependencies {
-    modImplementation "maven.modrinth:combat-roll:VERSION-fabric"
-}
-```
-In `fabric.mod.json` add a dependency to the mod:
-```json
-  "depends": {
-    "combatroll": ">=1.0.0"
-  },
+该属性被限制在 `0`～`1`。值为 `1` 时允许空中翻滚；低于 `1` 时，玩家离地后不能翻滚。
+
+## 安装
+
+1. 安装 **Minecraft 1.20.1** 和对应加载器：
+   - Fabric Loader `0.14.21` 或兼容版本
+   - Forge `47.0.4` 或兼容版本
+2. 安装 **Java 17**。
+3. 将对应加载器的 Combat Roll JAR 放入 `mods` 目录。
+4. 客户端和服务端都需要安装；仅客户端安装无法在多人服务器使用。
+
+`shiledattack` 与 Extreme Evasion 都是**可选**联动模组，不安装时不影响本模组的基础功能。
+
+## 配置
+
+### 客户端
+
+- **Fabric：** 通过 [Mod Menu](https://github.com/TerraformersMC/ModMenu) 打开 Combat Roll 设置。
+- **Forge：** 主菜单 → Mods → Combat Roll → Config。
+
+### 服务端
+
+首次启动后，服务器配置会生成在 `config` 目录。与上游不同的配置项如下：
+
+| 配置项 | 默认值 | 说明 |
+| --- | --- | --- |
+| `allow_rolling_while_airborn_default` | `false` | 决定 `combatroll:air_roll` 的默认值。设为 `true` 时默认允许所有玩家空中翻滚，但仍可被其他属性来源覆盖。 |
+| `cancel_current_action_on_roll` | `true` | 翻滚时自动停止使用物品、格挡等当前动作并继续翻滚。设为 `false` 时，正在使用物品或格挡将阻止翻滚，行为与上游一致。 |
+
+> **从上游升级时注意：** 上游的 `allow_rolling_while_airborn` 已被移除，请改用 `allow_rolling_while_airborn_default`，并通过 `combatroll:air_roll` 属性控制单个玩家。旧配置项不会继续生效。
+
+## 从源码构建
+
+需要 **JDK 17**。在仓库根目录执行：
+
+```bash
+./gradlew build
 ```
 
-(Substitute `VERSION` with the name of the latest release available on [Modrinth](https://modrinth.com/mod/combat-roll/versions))
+Windows：
 
-### Forge workspace
-```groovy
-dependencies {
-    implementation "maven.modrinth:combat-roll:VERSION-forge"
-}
-```
-In `mods.toml` add a dependency to the mod:
-```
-modId="combatroll"
-mandatory=true
-versionRange="[1.0.0,)"
-ordering="AFTER"
-side="BOTH"
+```powershell
+.\gradlew.bat build
 ```
 
-(Substitute `VERSION` with the name of the latest release available on [Modrinth](https://modrinth.com/mod/combat-roll/versions))
+构建产物位于各加载器子项目的 `build/libs` 目录：
+
+- Fabric：`fabric/build/libs`
+- Forge：`forge/build/libs`
+
+## 分支与贡献
+
+- 唯一维护分支：`1.20.1`
+- 不接受面向其他 Minecraft 版本的分支或 PR
+- 提交 PR 时请以 `1.20.1` 为目标分支，并说明是否改变了现有行为或配置格式
+- 本 Fork 不是上游官方发行版；相关问题请先确认是否由本 Fork 的改动引起
+
+## 致谢与许可
+
+- 原项目：[ZsoltMolnarrr/CombatRoll](https://github.com/ZsoltMolnarrr/CombatRoll)
+- 本 Fork 在原项目基础上修改，遵循 **GNU General Public License v3.0**，详见 [LICENCE](LICENCE)
+- 感谢上游作者及所有翻译、兼容性贡献者
